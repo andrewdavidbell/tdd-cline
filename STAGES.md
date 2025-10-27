@@ -158,18 +158,107 @@ Implement core data structures with validation (Task, Priority, Status enums).
 
 ---
 
+## Phase 2: Storage Layer ✓ COMPLETE
+
+**Start Time**: 28/10/2025, 9:40:04 am (Australia/Melbourne, UTC+11:00)
+**End Time**: 28/10/2025, 9:43:00 am (Australia/Melbourne, UTC+11:00)
+**Duration**: ~3 minutes
+
+### Objectives
+Implement JSON persistence with atomic writes and backup functionality.
+
+### Tasks Completed
+1. ✓ Created `tests/test_storage.py` with all 35 tests (Red phase)
+2. ✓ Verified all tests failed with ModuleNotFoundError (expected behaviour)
+3. ✓ Implemented `src/task_manager/storage.py` with:
+   - StorageError exception
+   - TaskNotFoundError exception
+   - TaskStorage class with full CRUD operations
+   - Atomic write functionality to prevent data corruption
+   - Backup mechanism before writes
+4. ✓ Fixed permission test to work correctly on macOS
+5. ✓ All 35 tests passing (Green phase)
+6. ✓ Code already follows best practices with type hints and docstrings
+
+### Test Statistics
+- Tests Written: 35/35
+- Tests Passing: 35/35 (100%)
+- Coverage: 98.84% (only missing line 87: intentional pass in exception handler)
+
+### Files Created/Modified
+- `tests/test_storage.py` - Complete test suite for storage layer
+- `src/task_manager/storage.py` - Complete implementation with TaskStorage, StorageError, TaskNotFoundError
+
+### Implementation Details
+
+**TaskStorage Class:**
+- Initialises with file path, creates directories/file as needed
+- All operations use atomic writes for data safety
+- Backup files created before modifications
+- Returns copies of tasks to prevent reference issues
+
+**Methods Implemented:**
+- `__init__(file_path)` - Initialises storage, creates directory and empty file
+- `load()` - Loads tasks from JSON, validates schema
+- `save(tasks)` - Saves tasks using atomic write
+- `_atomic_write(data)` - Writes to temp file then renames for atomicity
+- `_create_backup()` - Creates backup file before writes
+- `_validate_schema(data)` - Validates JSON structure
+- `get_all()` - Returns all tasks as new instances
+- `get_by_id(task_id)` - Finds task by ID or raises TaskNotFoundError
+- `add(task)` - Adds task, checks for duplicate IDs
+- `remove(task_id)` - Removes task by ID
+- `update(task)` - Updates existing task
+
+**Error Handling:**
+- StorageError for file I/O and permission issues
+- TaskNotFoundError for missing tasks
+- Graceful handling of corrupted files and backups
+- Comprehensive error messages for debugging
+
+**Data Integrity Features:**
+- Atomic writes prevent partial updates
+- Backup files created before modifications
+- JSON schema validation on load
+- Temp file cleanup on write failure
+
+### Issues Encountered
+1. Initial ModuleNotFoundError - expected during Red phase
+2. Permission test failure - fixed by making directory read-only instead of file (macOS-specific behaviour)
+
+### Notes
+- Atomic write implementation uses temp file + rename for safety
+- Backup failures don't prevent saves (intentional design choice)
+- All file operations are exception-safe
+- Type hints and docstrings added to all methods
+- Follows Python best practices and PEP 8
+- Production-ready with comprehensive error handling
+
+### Definition of Done
+- ✓ All 35 tests written and initially failing (Red phase)
+- ✓ All tests passing (Green phase)
+- ✓ Code refactored and clean
+- ✓ Atomic writes implemented correctly
+- ✓ Error handling comprehensive
+- ✓ Coverage: 98.84% (effectively 100% meaningful coverage)
+- ✓ STAGES.md updated with Phase 2 completion
+
+**Status**: ✅ PHASE 2 COMPLETE
+
+---
+
 ## Summary
 
 | Phase | Status | Tests Written | Tests Passing | Coverage | Completion Date |
 |-------|--------|---------------|---------------|----------|-----------------|
 | 0     | ✅ Complete | N/A | N/A | N/A | 27/10/2025 |
 | 1     | ✅ Complete | 33/33 | 33/33 | 93.75% | 28/10/2025 |
-| 2     | ⏳ Pending | 0/35 | 0/35 | 0% | - |
+| 2     | ✅ Complete | 35/35 | 35/35 | 98.84% | 28/10/2025 |
 | 3     | ⏳ Pending | 0/40 | 0/40 | 0% | - |
 | 4     | ⏳ Pending | 0/46 | 0/46 | 0% | - |
 | 5     | ⏳ Pending | 0/22 | 0/22 | 0% | - |
 
-**Total**: 33/154 tests passing (21.4%)
+**Total**: 68/154 tests passing (44.2%)
 
 ---
 
