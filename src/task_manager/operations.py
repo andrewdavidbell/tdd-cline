@@ -5,6 +5,7 @@ This module provides business logic for task management operations including
 CRUD operations, filtering, sorting, and bulk operations.
 """
 
+import os
 from pathlib import Path
 from typing import Optional, List
 
@@ -20,8 +21,13 @@ def _get_storage() -> TaskStorage:
     """Get the storage instance, creating default if needed."""
     global _storage
     if _storage is None:
-        # Default storage location
-        storage_path = Path.home() / ".task_manager" / "tasks.json"
+        # Check for environment variable first
+        storage_path_str = os.environ.get("TASK_MANAGER_STORAGE")
+        if storage_path_str:
+            storage_path = Path(storage_path_str)
+        else:
+            # Default storage location
+            storage_path = Path.home() / ".task_manager" / "tasks.json"
         _storage = TaskStorage(storage_path)
     return _storage
 

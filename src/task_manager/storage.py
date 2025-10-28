@@ -119,10 +119,6 @@ class TaskStorage:
         Raises:
             OSError: If the write operation fails
         """
-        # Create backup if file exists and has content
-        if self._file_path.exists() and self._file_path.stat().st_size > 0:
-            self._create_backup()
-
         # Write to temporary file
         temp_path = self._file_path.parent / f"{self._file_path.name}.tmp"
 
@@ -132,6 +128,9 @@ class TaskStorage:
 
             # Atomically rename temp file to target file
             temp_path.rename(self._file_path)
+
+            # Create backup after successful write (last known good state)
+            self._create_backup()
 
         except Exception as e:
             # Clean up temp file if it exists
