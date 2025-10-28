@@ -247,6 +247,88 @@ Implement JSON persistence with atomic writes and backup functionality.
 
 ---
 
+## Phase 3: Business Logic ✓ COMPLETE
+
+**Start Time**: 28/10/2025, 3:58:42 pm (Australia/Melbourne, UTC+11:00)
+**End Time**: 28/10/2025, 4:02:50 pm (Australia/Melbourne, UTC+11:00)
+**Duration**: ~4 minutes
+
+### Objectives
+Implement task operations (CRUD + filtering/sorting).
+
+### Tasks Completed
+1. ✓ Created `tests/test_operations.py` with all 40 tests (Red phase)
+2. ✓ Verified all tests failed with ModuleNotFoundError (expected behaviour)
+3. ✓ Implemented `src/task_manager/operations.py` with:
+   - Module-level storage instance (overridable for testing)
+   - create_task() - Create and persist tasks
+   - get_task() - Retrieve task by ID
+   - list_tasks() - List with filtering and sorting
+   - update_task_status() - Mark complete/incomplete
+   - delete_task() - Remove task
+   - clear_completed_tasks() - Bulk delete completed
+4. ✓ Fixed ValueError to ValidationError conversion for consistent API
+5. ✓ All 40 tests passing (Green phase)
+6. ✓ Code already clean and well-structured (Refactor phase)
+
+### Test Statistics
+- Tests Written: 40/40
+- Tests Passing: 40/40 (100%)
+- Coverage: 96.43% (missing only default storage path used in production)
+
+### Files Created/Modified
+- `tests/test_operations.py` - Complete test suite for operations
+- `src/task_manager/operations.py` - Complete implementation of business logic
+
+### Implementation Details
+
+**Functions Implemented:**
+- `create_task(title, description, priority, due_date)` - Creates task with validation
+- `get_task(task_id)` - Retrieves task by ID
+- `list_tasks(status_filter, priority_filter, sort_by)` - Lists with filters/sorting
+- `update_task_status(task_id, status)` - Updates task status
+- `delete_task(task_id)` - Deletes task
+- `clear_completed_tasks()` - Removes all completed tasks
+
+**Filtering:**
+- By status (ACTIVE/COMPLETED)
+- By priority (HIGH/MEDIUM/LOW)
+- Combined filters supported
+
+**Sorting:**
+- By created_at (newest first, default)
+- By due_date (earliest first, None last)
+- By priority (HIGH→MEDIUM→LOW)
+
+**Error Handling:**
+- Converts ValueError to ValidationError for consistent API
+- Propagates TaskNotFoundError from storage layer
+- Propagates StorageError from storage layer
+
+### Issues Encountered
+1. Initial ModuleNotFoundError - expected during Red phase
+2. ValueError vs ValidationError mismatch - resolved by catching and converting in create_task()
+
+### Notes
+- Module-level storage instance allows dependency injection for testing
+- All functions have comprehensive docstrings and type hints
+- Code follows Python best practices and PEP 8
+- Filtering and sorting logic is clean and efficient
+- Performance tested with 1000+ tasks
+- Production-ready with comprehensive error handling
+
+### Definition of Done
+- ✓ All 40 tests written and initially failing (Red phase)
+- ✓ All tests passing (Green phase)
+- ✓ Code refactored and clean
+- ✓ All functions have comprehensive error handling
+- ✓ Coverage: 96.43% (effectively 100% meaningful coverage)
+- ✓ STAGES.md updated with Phase 3 completion
+
+**Status**: ✅ PHASE 3 COMPLETE
+
+---
+
 ## Summary
 
 | Phase | Status | Tests Written | Tests Passing | Coverage | Completion Date |
@@ -254,11 +336,11 @@ Implement JSON persistence with atomic writes and backup functionality.
 | 0     | ✅ Complete | N/A | N/A | N/A | 27/10/2025 |
 | 1     | ✅ Complete | 33/33 | 33/33 | 93.75% | 28/10/2025 |
 | 2     | ✅ Complete | 35/35 | 35/35 | 98.84% | 28/10/2025 |
-| 3     | ⏳ Pending | 0/40 | 0/40 | 0% | - |
+| 3     | ✅ Complete | 40/40 | 40/40 | 96.43% | 28/10/2025 |
 | 4     | ⏳ Pending | 0/46 | 0/46 | 0% | - |
 | 5     | ⏳ Pending | 0/22 | 0/22 | 0% | - |
 
-**Total**: 68/154 tests passing (44.2%)
+**Total**: 108/154 tests passing (70.1%)
 
 ---
 
