@@ -29,3 +29,7 @@ pytest --cov=src/task_manager --cov-report=term-missing
 ## Project Status
 
 This project is currently under active development following TD-AID methodology.
+
+## Acknowledgment
+
+Thank you to Andrew Cranston for sharing his AI assisted Test-Driven Development methodology, [TD-AID](https://andrewjcode.substack.com/p/ai-is-writing-terrible-code).
