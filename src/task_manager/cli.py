@@ -7,9 +7,9 @@ This module provides a user-friendly CLI for managing tasks using argparse.
 import argparse
 import sys
 from typing import List
-from src.task_manager import operations
-from src.task_manager.models import Task, Status, ValidationError
-from src.task_manager.storage import TaskNotFoundError, StorageError
+from task_manager import operations
+from task_manager.models import Task, Status, ValidationError
+from task_manager.storage import TaskNotFoundError, StorageError
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -114,7 +114,7 @@ def format_task_list(tasks: List[Task]) -> str:
 
     # Task rows
     for task in tasks:
-        task_id = str(task.id)[:8] + '...'  # Truncate ID for display
+        task_id = str(task.id)
         title = task.title[:27] + '...' if len(task.title) > 30 else task.title
         priority = task.priority.value
         status = task.status.value

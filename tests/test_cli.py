@@ -9,7 +9,7 @@ import pytest
 import io
 import sys
 from unittest.mock import patch, MagicMock
-from src.task_manager.cli import (
+from task_manager.cli import (
     create_parser,
     cmd_add,
     cmd_list,
@@ -21,8 +21,8 @@ from src.task_manager.cli import (
     format_task_list,
     main,
 )
-from src.task_manager.models import Task, Priority, Status, ValidationError
-from src.task_manager.storage import TaskNotFoundError, StorageError
+from task_manager.models import Task, Priority, Status, ValidationError
+from task_manager.storage import TaskNotFoundError, StorageError
 from datetime import datetime, timedelta
 
 
@@ -133,7 +133,7 @@ def test_clear_command_no_args():
 
 # Test Command Handlers
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_add_creates_task(mock_ops):
     """Verify cmd_add calls operations.create_task()."""
     mock_task = Task(title='Test Task')
@@ -145,7 +145,7 @@ def test_cmd_add_creates_task(mock_ops):
     mock_ops.create_task.assert_called_once_with('Test Task', None, 'medium', None)
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_add_displays_success_message(mock_ops, capsys):
     """Verify cmd_add displays success message."""
     mock_task = Task(title='Test Task')
@@ -158,7 +158,7 @@ def test_cmd_add_displays_success_message(mock_ops, capsys):
     assert 'Task created successfully' in captured.out
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_add_displays_task_details(mock_ops, capsys):
     """Verify cmd_add displays task details."""
     mock_task = Task(title='Test Task')
@@ -172,7 +172,7 @@ def test_cmd_add_displays_task_details(mock_ops, capsys):
     assert 'Test Task' in captured.out
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_add_handles_validation_error(mock_ops, capsys):
     """Verify cmd_add handles ValidationError."""
     mock_ops.create_task.side_effect = ValidationError('Invalid title')
@@ -185,7 +185,7 @@ def test_cmd_add_handles_validation_error(mock_ops, capsys):
     assert 'Invalid title' in captured.out
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_list_displays_all_tasks(mock_ops, capsys):
     """Verify cmd_list displays all tasks."""
     tasks = [Task(title='Task 1'), Task(title='Task 2')]
@@ -199,7 +199,7 @@ def test_cmd_list_displays_all_tasks(mock_ops, capsys):
     assert 'Task 2' in captured.out
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_list_displays_empty_message(mock_ops, capsys):
     """Verify cmd_list shows message when no tasks."""
     mock_ops.list_tasks.return_value = []
@@ -211,7 +211,7 @@ def test_cmd_list_displays_empty_message(mock_ops, capsys):
     assert 'No tasks found' in captured.out
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_list_filters_by_status(mock_ops):
     """Verify cmd_list applies status filter."""
     mock_ops.list_tasks.return_value = []
@@ -222,7 +222,7 @@ def test_cmd_list_filters_by_status(mock_ops):
     mock_ops.list_tasks.assert_called_once_with('active', None, 'created_at')
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_list_filters_by_priority(mock_ops):
     """Verify cmd_list applies priority filter."""
     mock_ops.list_tasks.return_value = []
@@ -233,7 +233,7 @@ def test_cmd_list_filters_by_priority(mock_ops):
     mock_ops.list_tasks.assert_called_once_with(None, 'high', 'created_at')
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_list_sorts_correctly(mock_ops):
     """Verify cmd_list applies sort order."""
     mock_ops.list_tasks.return_value = []
@@ -244,7 +244,7 @@ def test_cmd_list_sorts_correctly(mock_ops):
     mock_ops.list_tasks.assert_called_once_with(None, None, 'due_date')
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_complete_marks_task_complete(mock_ops):
     """Verify cmd_complete calls update_task_status()."""
     args = MagicMock(task_id='test-id')
@@ -253,7 +253,7 @@ def test_cmd_complete_marks_task_complete(mock_ops):
     mock_ops.update_task_status.assert_called_once_with('test-id', Status.COMPLETED)
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_complete_displays_success_message(mock_ops, capsys):
     """Verify cmd_complete displays success message."""
     args = MagicMock(task_id='test-id')
@@ -263,7 +263,7 @@ def test_cmd_complete_displays_success_message(mock_ops, capsys):
     assert 'marked as completed' in captured.out or 'completed successfully' in captured.out.lower()
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_complete_handles_not_found_error(mock_ops, capsys):
     """Verify cmd_complete handles TaskNotFoundError."""
     mock_ops.update_task_status.side_effect = TaskNotFoundError('Task not found')
@@ -276,7 +276,7 @@ def test_cmd_complete_handles_not_found_error(mock_ops, capsys):
     assert 'not found' in captured.out.lower()
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_incomplete_marks_task_active(mock_ops):
     """Verify cmd_incomplete calls update_task_status()."""
     args = MagicMock(task_id='test-id')
@@ -285,7 +285,7 @@ def test_cmd_incomplete_marks_task_active(mock_ops):
     mock_ops.update_task_status.assert_called_once_with('test-id', Status.ACTIVE)
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_incomplete_displays_success_message(mock_ops, capsys):
     """Verify cmd_incomplete displays success message."""
     args = MagicMock(task_id='test-id')
@@ -295,7 +295,7 @@ def test_cmd_incomplete_displays_success_message(mock_ops, capsys):
     assert 'marked as active' in captured.out or 'incomplete' in captured.out.lower()
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_delete_removes_task(mock_ops):
     """Verify cmd_delete calls delete_task()."""
     args = MagicMock(task_id='test-id')
@@ -304,7 +304,7 @@ def test_cmd_delete_removes_task(mock_ops):
     mock_ops.delete_task.assert_called_once_with('test-id')
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_delete_displays_success_message(mock_ops, capsys):
     """Verify cmd_delete displays success message."""
     args = MagicMock(task_id='test-id')
@@ -314,7 +314,7 @@ def test_cmd_delete_displays_success_message(mock_ops, capsys):
     assert 'deleted' in captured.out.lower()
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_delete_handles_not_found_error(mock_ops, capsys):
     """Verify cmd_delete handles TaskNotFoundError."""
     mock_ops.delete_task.side_effect = TaskNotFoundError('Task not found')
@@ -327,7 +327,7 @@ def test_cmd_delete_handles_not_found_error(mock_ops, capsys):
     assert 'not found' in captured.out.lower()
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_clear_removes_completed_tasks(mock_ops):
     """Verify cmd_clear calls clear_completed_tasks()."""
     mock_ops.clear_completed_tasks.return_value = 3
@@ -338,7 +338,7 @@ def test_cmd_clear_removes_completed_tasks(mock_ops):
     mock_ops.clear_completed_tasks.assert_called_once()
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_clear_displays_count_message(mock_ops, capsys):
     """Verify cmd_clear displays count of removed tasks."""
     mock_ops.clear_completed_tasks.return_value = 3
@@ -351,7 +351,7 @@ def test_cmd_clear_displays_count_message(mock_ops, capsys):
     assert 'removed' in captured.out.lower() or 'deleted' in captured.out.lower() or 'cleared' in captured.out.lower()
 
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_cmd_clear_displays_none_message(mock_ops, capsys):
     """Verify cmd_clear shows message when no completed tasks."""
     mock_ops.clear_completed_tasks.return_value = 0
@@ -455,7 +455,7 @@ def test_list_help_shows_filters(capsys):
 
 # Test Error Handling
 
-@patch('src.task_manager.cli.operations')
+@patch('task_manager.cli.operations')
 def test_handles_storage_error_gracefully(mock_ops, capsys):
     """Verify StorageError is displayed to user."""
     mock_ops.create_task.side_effect = StorageError('Disk full')
@@ -489,7 +489,7 @@ def test_main_entry_point_exists():
     assert callable(main)
 
 
-@patch('src.task_manager.cli.create_parser')
+@patch('task_manager.cli.create_parser')
 def test_main_entry_point_callable(mock_create_parser):
     """Verify main() can be called from command line."""
     mock_parser = MagicMock()
@@ -501,6 +501,6 @@ def test_main_entry_point_callable(mock_create_parser):
     )
     mock_create_parser.return_value = mock_parser
 
-    with patch('src.task_manager.cli.cmd_list'):
+    with patch('task_manager.cli.cmd_list'):
         result = main()
         assert result == 0
